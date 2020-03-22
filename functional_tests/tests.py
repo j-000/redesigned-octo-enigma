@@ -1,10 +1,11 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 import time
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Chrome()
@@ -20,7 +21,7 @@ class NewVisitorTest(unittest.TestCase):
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Maria has heard about a cool online to-do list app.
         # she goes to the website to see its homepage
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # she notices the page title and header mention to-do lists
         self.assertIn('To-Do', self.browser.title)
@@ -40,7 +41,7 @@ class NewVisitorTest(unittest.TestCase):
         # "1: Buy peacock feathers" as an item in a to-do list.
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
-        self.check_for_row_in_list_table('1: Buy peacock feathers')
+        self.check_for_row_in_list_table('1 Buy peacock feathers')
 
         # There is still a text box inviting her to add another item,.
         # She enters: "Clear the rubbish outside"
@@ -51,9 +52,9 @@ class NewVisitorTest(unittest.TestCase):
 
         # The page updates again and now both items show on her list.
         self.check_for_row_in_list_table(
-            '1: Buy peacock feathers')
+            '1 Buy peacock feathers')
         self.check_for_row_in_list_table(
-            '2: Use peacock feathers to make a fly')
+            '2 Use peacock feathers to make a fly')
 
         # Maria wonders whether the site will remember her list.
         # Then she sees that the site has
@@ -65,7 +66,3 @@ class NewVisitorTest(unittest.TestCase):
         # Maria goes to bed.
 
         self.fail('Finish the test!')
-
-
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
