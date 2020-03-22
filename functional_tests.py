@@ -30,25 +30,32 @@ class NewVisitorTest(unittest.TestCase):
         )
         # she types "buy bacalhau for dinner" into a text box
         inputbox.send_keys('Buy peacock feathers')
-
-        # when she hits Enter, the page updates and now the page displays
-        # "1: Buy bacalhau for dinner" as an item in a to-do list.
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
 
-        # There is still a text box inviting her to add another item,. She enters
-        # "Clear the rubbish outside"
+        # when she hits Enter, the page updates and now the page displays
+        # "1: Buy peacock feathers" as an item in a to-do list.
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: Buy peacock feathers' for row in rows),
-            "New to-do item did not appear in the table"
-        )
+        self.assertIn('1: Buy peacock feathers',  [row.text for row in rows]),
+
+        # There is still a text box inviting her to add another item,.
+        # She enters: "Clear the rubbish outside"
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Use peacock feathers to make a fly')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
 
         # The page updates again and now both items show on her list.
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('2: Use peacock feathers to make a fly',
+                      [row.text for row in rows]),
 
-        # Maria wonders whether the site will remember her list. Then she sees that the site has
-        # generated a unique URL for here -- there is some explanatory text to that effect
+        # Maria wonders whether the site will remember her list.
+        # Then she sees that the site has
+        # generated a unique URL for here --
+        # there is some explanatory text to that effect
 
         # she visits that url an her to-do list is intact
 
